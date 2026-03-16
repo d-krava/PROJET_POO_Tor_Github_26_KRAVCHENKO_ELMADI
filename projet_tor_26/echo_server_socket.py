@@ -1,28 +1,40 @@
+"""
+echo_server_socket.py
+---------------------
+Serveur d'écho TCP IPv4.
+"""
 import socket
-import sys
+import threading
 
-TCP_IP_srv = '10.102.74.44'
-TCP_PORT = 2000
-BUFFER_SIZE = 1024
+from echo_server import EchoServer
+from socket_transport import send_seq_binaire, recv_seq_binaire, HOST
 
+class EchoServerSocket:
+        
+        def __init__(self, port: int) -> None:
+                self.port = port
+                self._inner = EchoServer("echo_server")
+                self._thread = threading.Thread(
+                        target=self._serve, daemon=True, name="echo-server"
+                )
+       
+        def start(self) -> None:
+                self._thread.start()
+        
+        def _serve(self) -> None:
+                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as srv:
+                        srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                        srv.bind((HOST, self.port))
+                        srv.listen(8)
+                        print(f" [echo_server] Écoute sur {HOST}:{self.port}")
+                        while True:
+                                conn, _ = srv.accept()
+                                threading.Thread(
+                                        target=self._handle, args=(conn,), daemon=True
+                                ).start()
 
-try :
-        tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-except socket.error:
-        print('Une error')
-        sys.exit();
-
-tcp_socket.bind((TCP_IP_srv, TCP_PORT))
-
-tcp_socket.listen(3)
-print('En ecoute')
-
-connexion, adresse = tcp_socket.accept()
-print('Connecté avec : ', adresse)
-data = connexion.recv(BUFFER_SIZE)
-print('Message reçu du client : ', data)
-
-reponse_serveur = 'Merci pour la connexion'
-connexion.sendall(reponse_serveur.encode('utf8'))
-
-connexion.close()
+        def _handle(self, conn: socket.socket) -> None:
+                with conn:
+                        message = recv_seq_binaire(conn)
+                        response = self._inner.handle(message)
+                        send_seq_binaire(conn, response)
