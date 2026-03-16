@@ -10,10 +10,11 @@ Chaque nœud :
     - rechiffre la réponse et la renvoie au client
 """
 
+import struct
 import threading
 import socket
 
-from onion_node        import OnionNode
+from crypto_suites_utiles import RSAKeyPair, aes_decrypt, aes_encrypt
 from socket_transport  import send_seq_binaire, recv_seq_binaire, send_recv, HOST
 
 
