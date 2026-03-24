@@ -11,7 +11,7 @@ Protocole de cadrage : longueur (4 octets big-endian) || données
 import socket
 import struct
 
-HOST        = " ... "
+HOST        = "127.0.0.1"
 BUFFER_SIZE = 4096
 LENGTH_SIZE = 4          # octets pour encoder la longueur du message
 
