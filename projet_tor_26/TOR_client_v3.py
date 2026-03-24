@@ -34,7 +34,7 @@ class Client:
       6. Reçoit la réponse chiffrée et la déchiffre.
     """
 
-    def __init__(self, hote="à compléter", port=à compléter, nom_serveur="ServeurEcho"):
+    def __init__(self, hote="127.0.0.1", port=5000, nom_serveur="ServeurEcho"):
         self._hote        = hote
         self._port        = port
         self._nom_serveur = nom_serveur
@@ -183,7 +183,7 @@ class Client:
 
 if __name__ == "__main__":
 
-    client = Client(hote="à compléter", port=à compléter, nom_serveur="ServeurEcho")
+    client = Client(hote="127.0.0.1", port=5000, nom_serveur="ServeurEcho")
 
     # Liste de messages de démonstration
     messages = [
