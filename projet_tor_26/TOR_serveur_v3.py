@@ -37,7 +37,7 @@ class Serveur:
 
     """
 
-    def __init__(self, hote="127.0.0.1", port=5000, nom="ServeurEcho"):
+    def __init__(self, hote="127.0.0.1", port=9001, nom="ServeurEcho"):
         self._hote  = hote
         self._port  = port
         self._nom   = nom
